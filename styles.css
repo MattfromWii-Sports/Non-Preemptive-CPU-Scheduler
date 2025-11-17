@@ -1,0 +1,21 @@
+/* reset all styles */
+* {
+    padding: 0;
+    margin: 0;
+    border: 0px;
+}
+
+body {
+    width: 100%;
+    padding: 5rem;
+    text-align: center;
+    box-sizing:border-box;
+}
+
+.content {
+    
+}
+
+.content > div {
+    background-color: gray;
+}
