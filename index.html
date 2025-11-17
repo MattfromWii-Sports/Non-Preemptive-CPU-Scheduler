@@ -1,17 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CPU Scheduling | Non-Preemptive</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
-</head>
-<body>
-    <h1 class="title">Title</h1>
+  </head>
+  <body>
+    <h1 class="title">CPU Scheduling Algorithm Calculator (Non-Preemptive)</h1>
     <div class="content">
-        <div class="left-content"></div>
-        <div class="right-content"></div>
+      <div class="left-content">
+        <div class="left-content-top">
+          <h2 class="sub-title">INPUT</h2>
+          <!-- dropdown -->
+          <form action="#" class="dropdown-container">
+            <label for="algorithm" class="input-title">Algorithm</label>
+            <select name="algorithm" id="algorithm" required>
+              <option value="fcfs" selected>First Come First Serve</option>
+              <option value="sjf">Shortest Job First</option>
+              <option value="priority">Priority</option>
+              <option value="deadline">Deadline</option>
+              <option value="deadline">Multilevel Queue</option>
+            </select>
+          </form>
+          <!-- dropdown -->
+          <form action="#" class="dropdown-container">
+            <label for="processnum" class="input-title"
+              >Number of Processes</label
+            >
+            <select name="processnum" id="processnum" required>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="6">7</option>
+              <option value="6">8</option>
+              <option value="6">9</option>
+            </select>
+          </form>
+        </div>
+        <div class="left-content-bottom">
+          <button id="calculate-btn">Calculate</button>
+        </div>
+      </div>
+      <div class="right-content">
+        <h2 class="sub-title">OUTPUT</h2>
+        <p class="left-indent">Gantt Chart and Table</p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

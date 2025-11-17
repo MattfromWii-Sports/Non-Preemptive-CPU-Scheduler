@@ -1,21 +1,91 @@
 /* reset all styles */
 * {
-    padding: 0;
-    margin: 0;
-    border: 0px;
+  padding: 0;
+  margin: 0;
+  border: 0px;
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+/* misc classes */
+.left-indent {
+  text-align: start;
 }
 
 body {
-    width: 100%;
-    padding: 5rem;
-    text-align: center;
-    box-sizing:border-box;
+  width: 100%;
+  padding: 3rem;
+  text-align: center;
+  box-sizing: border-box;
+  background-color: #d9d9d9;
 }
 
+.title {
+  margin-bottom: 2rem;
+}
 .content {
-    
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
 }
 
 .content > div {
-    background-color: gray;
+  background-color: white;
+  padding: 1.5rem;
+  border: 2px solid black;
+  border-radius: 2px;
+}
+
+.left-content {
+  width: 15rem;
+  min-height: 20rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.left-content-top {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+}
+.left-content-bottom {
+  display: flex;
+  justify-content: end;
+}
+.input-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+#calculate-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  background-color: #38b6ff;
+  color: white;
+  font-weight: bold;
+}
+/* DROPDOWN */
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 5px;
+}
+.dropdown-container > select {
+  border: 2px solid gainsboro;
+  padding: 4px;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+.right-content {
+  flex-grow: 1;
+  min-height: 20rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.sub-title {
+  text-align: left;
 }
