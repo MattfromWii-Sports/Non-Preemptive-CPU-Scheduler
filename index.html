@@ -21,7 +21,7 @@
               <option value="sjf">Shortest Job First</option>
               <option value="priority">Priority</option>
               <option value="deadline">Deadline</option>
-              <option value="deadline">Multilevel Queue</option>
+              <option value="mlq">Multilevel Queue</option>
             </select>
           </form>
           <!-- dropdown -->
@@ -35,9 +35,9 @@
               <option value="4">4</option>
               <option value="5">5</option>
               <option value="6">6</option>
-              <option value="6">7</option>
-              <option value="6">8</option>
-              <option value="6">9</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
             </select>
           </form>
         </div>
@@ -48,6 +48,67 @@
       <div class="right-content">
         <h2 class="sub-title">OUTPUT</h2>
         <p class="left-indent">Gantt Chart and Table</p>
+
+        <div class="table-container">
+          <!-- for table -->
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Process ID</th>
+                <th>Arrival Time</th>
+                <th>Burst Time</th>
+                <th>Start Time</th>
+                <th>Finish Time</th>
+                <th>Turnaround Time</th>
+                <th>Waiting Time</th>
+                <th>Response Time</th>
+              </tr>
+            </thead>
+            <tbody class="row-container">
+              <tr class="table-row">
+                <td class="process">P1</td>
+                <td class="arrival-time">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="burst-time">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr class="table-row">
+                <td class="process">P2</td>
+                <td class="arrival-time">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="burst-time">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <!-- add new rows before this -->
+              <tr class="table-row-last">
+                <td>AVE</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+
+              <!--  -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </body>

@@ -89,3 +89,47 @@ body {
 .sub-title {
   text-align: left;
 }
+
+/* Table styles */
+.table-container {
+  margin-top: 1rem;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid #ccc;
+  text-align: center;
+  width: 12.5%; /* make all columns the same width*/
+}
+
+/* Style for the header */
+.data-table th {
+  background-color: #f0f0f0;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+.data-table input {
+  width: 100%;
+  padding: 8px 5px;
+  box-sizing: border-box;
+  border: none;
+  text-align: center;
+}
+
+/* Visual change on input focus */
+.data-table input:focus {
+  outline: 2px solid #5d9cec; /* A light blue border on focus */
+  background-color: #eaf3ff;
+  display: block;
+}
+
+.table-row-last td {
+  padding: 8px 5px;
+  box-sizing: border-box;
+  text-align: center;
+}
