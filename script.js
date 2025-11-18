@@ -29,13 +29,16 @@ selectProcessBtn.addEventListener("click", () => {
 const calculateBtn = document.getElementById("calculate-btn");
 calculateBtn.addEventListener("click", () => {
   console.log("calculate!");
-  // get data from table
-  getProcessData();
 
   // verify if all inputs are filled correctly
+  errorDisplay.textContent = "";
   if (verifyInputs()) {
     errorDisplay.textContent = "Invalid Inputs";
+    return; // don't continue since invalid input present
   }
+
+  // get data from table
+  getProcessData();
 });
 
 // Var for the table body to append rows to
