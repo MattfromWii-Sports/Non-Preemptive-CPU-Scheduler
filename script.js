@@ -11,7 +11,11 @@ function updateInputVariables() {
   algoType = algorithm.value;
 }
 
-// Event listeners
+// var for error messages
+const errorDisplay = document.querySelector(".error-msg");
+let hasError = false; // for table
+
+// Event listener -> Process number
 const selectProcessBtn = document.getElementById("processnum");
 selectProcessBtn.addEventListener("click", () => {
   // check for input changes
@@ -21,12 +25,17 @@ selectProcessBtn.addEventListener("click", () => {
   updateTableRows();
 });
 
+// Event listener -> Calculate button
 const calculateBtn = document.getElementById("calculate-btn");
 calculateBtn.addEventListener("click", () => {
   console.log("calculate!");
+  // get data from table
+  getProcessData();
 
   // verify if all inputs are filled correctly
-  verifyInputs();
+  if (verifyInputs()) {
+    errorDisplay.textContent = "Invalid Inputs";
+  }
 });
 
 // Var for the table body to append rows to
@@ -34,14 +43,17 @@ const tableMain = document.querySelector(".row-container");
 
 // check if inputs are worng or empty
 function verifyInputs() {
+  hasError = false;
   const allInputs = tableMain.querySelectorAll("input");
   allInputs.forEach((input) => {
+    input.style.backgroundColor = "white";
     const val = input.value;
     if (val == "" || !/^\d+$/.test(val)) {
       input.style.backgroundColor = "#ffcccc";
-      console.log(3243);
+      hasError = true;
     }
   });
+  return hasError;
 }
 
 // update number of table rows
@@ -67,7 +79,7 @@ function updateTableRows() {
 
     while (startNum <= endNum) {
       const newRow = createNewRow(startNum);
-      tableMain.insertBefore(newRow, lastRow);
+      tableMain.insertBefore(newRow, lastRow); // insert new rows before last row
       startNum++;
     }
   }
@@ -108,6 +120,29 @@ function updateTableRows() {
   function getRowCount() {
     return tableMain.querySelectorAll(".table-row").length;
   }
+}
+
+// SJF
+// Process = [PID, AT, BT]
+function getProcessData() {
+  const inputRows = document.querySelectorAll(".row-container .table-row");
+  const processes = [];
+
+  inputRows.forEach((row, index) => {
+    const arrivalTime_input = row.querySelector(".arrival-time input");
+    const arrivalTime = parseInt(arrivalTime_input.value) || 0;
+
+    const burstTime_input = row.querySelector(".burst-time input");
+    const burstTime = parseInt(burstTime_input.value) || 0;
+
+    processes.push({
+      PID: index + 1,
+      arrivalTime: arrivalTime,
+      burstTime: burstTime,
+    });
+  });
+  console.log(processes);
+  return processes;
 }
 
 // Render & calculate Table based on array with P objects

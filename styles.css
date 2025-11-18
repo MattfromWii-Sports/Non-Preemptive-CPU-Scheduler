@@ -133,3 +133,10 @@ body {
   box-sizing: border-box;
   text-align: center;
 }
+
+.error-msg {
+  color: red;
+  text-align: start;
+  font-size: 0.9rem;
+  padding-left: 2px;
+}
