@@ -53,10 +53,11 @@
           <!-- for table -->
           <table class="data-table">
             <thead>
-              <tr>
+              <tr class="header-row">
                 <th>Process ID</th>
                 <th>Arrival Time</th>
                 <th>Burst Time</th>
+                <th class="priority-header hide">Priority</th>
                 <th>Start Time</th>
                 <th>Finish Time</th>
                 <th>Turnaround Time</th>
@@ -73,11 +74,14 @@
                 <td class="burst-time">
                   <input pattern="[0-9]*" />
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="priority-time hide">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="start-time"></td>
+                <td class="finish-time"></td>
+                <td class="turnaround-time"></td>
+                <td class="waiting-time"></td>
+                <td class="response-time"></td>
               </tr>
               <tr class="table-row">
                 <td class="process">P2</td>
@@ -87,17 +91,21 @@
                 <td class="burst-time">
                   <input pattern="[0-9]*" />
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="priority-time hide">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="start-time"></td>
+                <td class="finish-time"></td>
+                <td class="turnaround-time"></td>
+                <td class="waiting-time"></td>
+                <td class="response-time"></td>
               </tr>
               <!-- add new rows before this -->
               <tr class="table-row-last">
                 <td>AVE</td>
                 <td></td>
                 <td></td>
+                <td class="priority-ave hide"></td>
                 <td></td>
                 <td></td>
                 <td></td>

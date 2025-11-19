@@ -15,9 +15,54 @@ function updateInputVariables() {
 const errorDisplay = document.querySelector(".error-msg");
 let hasError = false; // for table
 
+// Event listener -> Algorithm
+const selectAlgorithmBtn = document.getElementById("algorithm");
+selectAlgorithmBtn.addEventListener("change", () => {
+  // var for ave columns
+  const avePrioRow = document.querySelector(".priority-ave");
+  // vars for hidden columns
+  const priorityHeader = document.querySelector(".priority-header");
+  const priorityColumns = document.querySelectorAll(
+    ".data-table .priority-time"
+  );
+
+  // reset all columns
+  resetColumns();
+
+  // Special cases: Priority, Deadline, MLQ
+  if (selectAlgorithmBtn.value == "priority") {
+    // display 3rd column for priority
+    priorityHeader.classList.remove("hide");
+    priorityColumns.forEach((row) => {
+      row.classList.remove("hide");
+      console.log(row);
+    });
+    // add extra column in last row
+    avePrioRow.classList.remove("hide");
+  } else if (selectAlgorithmBtn.value == "dealdine") {
+    // add table changes here
+  } else if (selectAlgorithmBtn.value == "mlq") {
+    // add table changes here
+  }
+});
+// Helper function to reset hidden columns
+function resetColumns() {
+  const avePrioRow = document.querySelector(".priority-ave");
+  const priorityHeader = document.querySelector(".priority-header");
+  const priorityColumns = document.querySelectorAll(
+    ".data-table .priority-time"
+  );
+
+  avePrioRow.classList.add("hide");
+  priorityHeader.classList.add("hide");
+  priorityColumns.forEach((row) => {
+    row.classList.add("hide");
+  });
+}
+
 // Event listener -> Process number
 const selectProcessBtn = document.getElementById("processnum");
-selectProcessBtn.addEventListener("click", () => {
+selectProcessBtn.addEventListener("change", () => {
   // check for input changes
   updateInputVariables();
 
@@ -44,13 +89,17 @@ calculateBtn.addEventListener("click", () => {
 // Var for the table body to append rows to
 const tableMain = document.querySelector(".row-container");
 
-// check if inputs are worng or empty
+// check if inputs are wrong or empty
 function verifyInputs() {
   hasError = false;
   const allInputs = tableMain.querySelectorAll("input");
   allInputs.forEach((input) => {
     input.style.backgroundColor = "white";
     const val = input.value;
+    if (input.parentElement.classList.contains("hide")) {
+      // ignore hidden columns
+      return;
+    }
     if (val == "" || !/^\d+$/.test(val)) {
       input.style.backgroundColor = "#ffcccc";
       hasError = true;
@@ -97,11 +146,14 @@ function updateTableRows() {
                   <td class="burst-time">
                     <input pattern="[0-9]*" />
                   </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>`;
+                  <td class="priority-time hide">
+                    <input pattern="[0-9]*" />
+                  </td>
+                  <td class="start-time"></td>
+                  <td class="finish-time"></td>
+                  <td class="turnaround-time"></td>
+                  <td class="waiting-time"></td>
+                  <td class="response-time"></td>`;
     return row;
   }
   // Helper function to remove rows from nth (except for last row)
@@ -138,13 +190,22 @@ function getProcessData() {
     const burstTime_input = row.querySelector(".burst-time input");
     const burstTime = parseInt(burstTime_input.value) || 0;
 
+    const priority_input = row.querySelector(".priority-time input");
+    const priorityTime = 0;
+
+    // for priority algo
+    if (algoType == "priority") {
+      priorityTime = parseInt(priority_input.value) || 0;
+    }
+
     processes.push({
       PID: index + 1,
       arrivalTime: arrivalTime,
       burstTime: burstTime,
+      priority: priorityTime,
     });
   });
-  console.log(processes);
+  console.log(processes); // for testing
   return processes;
 }
 

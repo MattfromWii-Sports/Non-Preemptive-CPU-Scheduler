@@ -121,6 +121,10 @@ body {
   text-align: center;
 }
 
+.data-table .hide {
+  display: none;
+}
+
 /* Visual change on input focus */
 .data-table input:focus {
   outline: 2px solid #5d9cec; /* A light blue border on focus */
