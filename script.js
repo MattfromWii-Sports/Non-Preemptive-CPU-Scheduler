@@ -4,6 +4,7 @@ import {
   updateTableRows,
   resetInputs,
   showPriorityRows,
+  showMLQRows,
 } from "./table.js";
 
 // Important input variables
@@ -33,7 +34,7 @@ selectAlgorithmBtn.addEventListener("change", () => {
   } else if (selectAlgorithmBtn.value == "dealdine") {
     // add table changes here
   } else if (selectAlgorithmBtn.value == "mlq") {
-    // add table changes here
+    showMLQRows();
   }
 });
 
@@ -89,9 +90,14 @@ function getProcessData() {
     const priority_input = row.querySelector(".priority-time input");
     let priorityTime = 0;
 
+    const queue_input = row.querySelector(".queue-num input");
+    let queueNum = 0;
+
     // for priority algo
     if (algoType == "priority") {
       priorityTime = parseInt(priority_input.value) || 0;
+    } else if (algoType == "mlq") {
+      queueNum = parseInt(queue_input.value) || 0;
     }
 
     processes.push({
@@ -99,6 +105,7 @@ function getProcessData() {
       arrivalTime: arrivalTime,
       burstTime: burstTime,
       priority: priorityTime, // 0 if not used
+      queueNum: queueNum,
       startTime: null,
       completionTime: null,
       turnaroundTime: null,

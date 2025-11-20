@@ -2,13 +2,14 @@ const tableMain = document.querySelector(".row-container");
 
 // Helper function to reset hidden columns
 export function resetColumns() {
+  resetInputs();
+
+  // Priority
   const avePrioRow = document.querySelector(".priority-ave");
   const priorityHeader = document.querySelector(".priority-header");
   const priorityColumns = document.querySelectorAll(
     ".data-table .priority-time"
   );
-
-  resetInputs();
 
   avePrioRow.classList.add("hide");
   priorityHeader.classList.add("hide");
@@ -17,6 +18,23 @@ export function resetColumns() {
       row.classList.add("hide");
     }
   });
+
+  // MLQ
+  const subqueueInt = document.querySelector(".mlq-suboptions");
+  subqueueInt.classList.add("hide");
+
+  const queueHeader = document.querySelector(".queue-header");
+  const aveQueueRow = document.querySelector(".queue-ave");
+  const queueColumns = document.querySelectorAll(".data-table .queue-num");
+
+  queueHeader.classList.add("hide");
+  queueColumns.forEach((row) => {
+    if (!row.classList.contains("hide")) {
+      row.classList.add("hide");
+    }
+  });
+  // add extra column in last row
+  aveQueueRow.classList.add("hide");
 }
 
 const errorDisplay = document.querySelector(".error-msg");
@@ -73,6 +91,8 @@ export function updateTableRows(algoType, numOfProcesses) {
   // if priority algo type
   if (algoType == "priority") {
     showPriorityRows();
+  } else if (algoType == "mlq") {
+    showMLQRows();
   }
 
   // Helper function to add empty rows
@@ -97,6 +117,9 @@ export function updateTableRows(algoType, numOfProcesses) {
                     <input pattern="[0-9]*" />
                   </td>
                   <td class="priority-time hide">
+                    <input pattern="[0-9]*" />
+                  </td>
+                  <td class="queue-num hide">
                     <input pattern="[0-9]*" />
                   </td>
                   <td class="start-time"></td>
@@ -146,4 +169,25 @@ export function showPriorityRows() {
   });
   // add extra column in last row
   avePrioRow.classList.remove("hide");
+}
+
+export function showMLQRows() {
+  // var for left interface
+  const subqueueInt = document.querySelector(".mlq-suboptions");
+  subqueueInt.classList.remove("hide");
+
+  // var for mlq columns
+  const queueHeader = document.querySelector(".queue-header");
+  const aveQueueRow = document.querySelector(".queue-ave");
+  const queueColumns = document.querySelectorAll(".data-table .queue-num");
+  // display header
+  queueHeader.classList.remove("hide");
+  // display 4rd column for queue
+  queueColumns.forEach((row) => {
+    if (row.classList.contains("hide")) {
+      row.classList.remove("hide");
+    }
+  });
+  // add extra column in last row
+  aveQueueRow.classList.remove("hide");
 }

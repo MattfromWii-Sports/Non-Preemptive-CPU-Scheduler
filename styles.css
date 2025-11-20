@@ -72,11 +72,27 @@ body {
   align-items: start;
   gap: 5px;
 }
-.dropdown-container > select {
+.dropdown-container select {
   border: 2px solid gainsboro;
   padding: 4px;
   font-size: 1rem;
   border-radius: 6px;
+}
+
+.mlq-suboptions {
+  display: flex;
+  flex-direction: column;
+}
+.mlq-suboptions.hide {
+  display: none;
+}
+.mlq-suboptions > label {
+  font-weight: bold;
+}
+
+/* to add a gap between for mlq elements */
+.nop {
+  margin-top: 10px;
 }
 
 .right-content {
