@@ -9,6 +9,8 @@ import {
 // Important input variables
 let numOfProcesses = 2; // default val
 let algoType = "fcfs"; // default val
+let processTable = null; // stores all the values
+let ganttChart = []; // stores final values
 
 // Update input variables
 function updateInputVariables() {
@@ -57,10 +59,15 @@ calculateBtn.addEventListener("click", () => {
   updateInputVariables();
 
   // verify if all inputs are filled correctly
-  verifyInputs();
+  if (verifyInputs()) {
+    return; // stop running if inputs are invalid
+  }
 
   // get data from table
-  getProcessData();
+  processTable = getProcessData();
+
+  // process the processTable
+  calculateTable(algoType, processTable);
 });
 
 // Var for the table body to append rows to
@@ -91,16 +98,94 @@ function getProcessData() {
       PID: index + 1,
       arrivalTime: arrivalTime,
       burstTime: burstTime,
-      priority: priorityTime,
+      priority: priorityTime, // 0 if not used
+      startTime: null,
+      completionTime: null,
+      turnaroundTime: null,
+      waitingTime: null,
+      responseTime: null,
     });
   });
   console.log(processes); // for testing
   return processes;
 }
 
-// Render & calculate Table based on array with P objects
-// Only AT, BT, ST, CT (Prio for special cases) needed
+// to calculate the st and ct
+function calculateTable(algo, process) {
+  switch (algo) {
+    case "fcfs":
+      console.log("fcfs!");
+      break;
+    case "sjf":
+      console.log("sjf!");
+      break;
+    case "priority":
+      console.log("priority!");
+      priority(process);
+      break;
+    case "deadline":
+      console.log("deadline!");
+      break;
+    case "mlq":
+      console.log("mlq!");
+      break;
+  }
+}
 
-// Render Gantt chart based on array with "P" objects
+// Algorithms
+// Add table update code here later
+function priority(process) {
+  let readyQ = []; // for processes that already arrived at time AT
+  let currentAt = 0;
 
-// Code under here runs immediately
+  // sort the processes by AT
+  const sortedProcess = sortProcessByAT(process);
+  currentAt = sortedProcess[0].arrivalTime;
+
+  // console.log(sortedProcess);
+
+  while (readyQ.length > 0 || sortedProcess.length > 0) {
+    // get the first processes = lowest AT & Priority
+    // get all processes that arrived before or during time AT
+    while (
+      sortedProcess.length !== 0 &&
+      sortedProcess[0].arrivalTime <= currentAt
+    ) {
+      readyQ.push(sortedProcess.shift());
+    }
+    // sort for priority -> first child is the lowest priority & first position
+    readyQ = sortProcessByP(readyQ);
+
+    currentAt += readyQ[0].burstTime;
+    ganttChart.push(readyQ.shift()); // push to gantt chart
+  }
+  console.log("gantt");
+  console.log(ganttChart);
+}
+
+// helper function to sort processes by at
+function sortProcessByAT(p) {
+  const sortedProcess = p.sort((a, b) => {
+    // sort by arrival time
+    if (a.arrivalTime !== b.arrivalTime) {
+      return a.arrivalTime - b.arrivalTime;
+    }
+
+    //Tie-breaker: first entered order)
+    return a.PID - b.PID;
+  });
+  return sortedProcess;
+}
+// helper function to sort processes by priority
+function sortProcessByP(p) {
+  const sortedProcess = p.sort((a, b) => {
+    // sort by arrival time
+    if (a.priority !== b.priority) {
+      return a.priority - b.priority;
+    }
+
+    //Tie-breaker: first entered order)
+    return a.PID - b.PID;
+  });
+  return sortedProcess;
+}

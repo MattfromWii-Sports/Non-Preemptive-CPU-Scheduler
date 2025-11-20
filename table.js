@@ -44,6 +44,7 @@ export function verifyInputs() {
   if (hasError) {
     errorDisplay.textContent = "Invalid Inputs";
   }
+  return hasError;
 }
 export function resetInputs() {
   const allInputs = tableMain.querySelectorAll("input");
@@ -99,7 +100,7 @@ export function updateTableRows(algoType, numOfProcesses) {
                     <input pattern="[0-9]*" />
                   </td>
                   <td class="start-time"></td>
-                  <td class="finish-time"></td>
+                  <td class="completion-time"></td>
                   <td class="turnaround-time"></td>
                   <td class="waiting-time"></td>
                   <td class="response-time"></td>`;
