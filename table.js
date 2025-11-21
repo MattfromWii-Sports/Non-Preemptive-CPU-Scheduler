@@ -191,3 +191,100 @@ export function showMLQRows() {
   // add extra column in last row
   aveQueueRow.classList.remove("hide");
 }
+
+// function to display the table
+// takes completed process array as an input
+export function displayTable(process) {
+  calculateValues(process);
+
+  const allRows = document.querySelectorAll(".table-row");
+  allRows.forEach((row) => {
+    // 1. Extract the PID from the HTML row (e.g., "P1" -> 1)
+    const pidText = row.querySelector(".process").textContent;
+    const currentPID = parseInt(pidText.substring(1));
+
+    // 2. Find the matching process object in the input array using the PID
+    const matchingProcess = process.find((p) => p.PID === currentPID);
+
+    if (matchingProcess) {
+      const st = row.querySelector(".start-time");
+      const ct = row.querySelector(".completion-time");
+      const tt = row.querySelector(".turnaround-time");
+      const wt = row.querySelector(".waiting-time");
+      const rt = row.querySelector(".response-time");
+
+      st.textContent = matchingProcess.startTime;
+      ct.textContent = matchingProcess.completionTime;
+      tt.textContent = matchingProcess.turnaroundTime;
+      wt.textContent = matchingProcess.waitingTime;
+      rt.textContent = matchingProcess.responseTime;
+    }
+  });
+
+  // calculate and display averages
+  calculateAvg(process);
+}
+// calculates tat, wt, rt, etc.
+export function calculateValues(process) {
+  process.forEach((p) => {
+    // tat = ct - at
+    p.turnaroundTime = p.completionTime - p.arrivalTime;
+    // wt = tat - bt
+    p.waitingTime = p.turnaroundTime - p.burstTime;
+    // rt = st - at
+    p.responseTime = p.startTime - p.arrivalTime;
+  });
+}
+// calculates and display averages
+function calculateAvg(process) {
+  let totalAT = 0;
+  let totalBT = 0;
+  let totalST = 0;
+  let totalCT = 0;
+  let totalTT = 0;
+  let totalWT = 0;
+  let totalRT = 0;
+  const count = process.length;
+
+  process.forEach((p) => {
+    // Accumulate totals for all required metrics
+    totalAT += p.arrivalTime;
+    totalBT += p.burstTime;
+    totalST += p.startTime;
+    totalCT += p.completionTime;
+    totalTT += p.turnaroundTime;
+    totalWT += p.waitingTime;
+    totalRT += p.responseTime;
+  });
+
+  // Calculate averages
+  const avgAT = (totalAT / count).toFixed(2);
+  const avgBT = (totalBT / count).toFixed(2);
+  const avgST = (totalST / count).toFixed(2);
+  const avgCT = (totalCT / count).toFixed(2);
+  const avgTT = (totalTT / count).toFixed(2);
+  const avgWT = (totalWT / count).toFixed(2);
+  const avgRT = (totalRT / count).toFixed(2);
+
+  // display averages
+  const aAve = document.querySelector(".arrival-ave");
+  const bAve = document.querySelector(".burst-ave");
+  const stAve = document.querySelector(".start-ave");
+  const ctAve = document.querySelector(".completion-ave");
+  const ttAve = document.querySelector(".turnaround-ave");
+  const wtAve = document.querySelector(".waiting-ave");
+  const rtAve = document.querySelector(".response-ave");
+
+  // Update the text content of the cells
+  aAve.textContent = avgAT;
+  bAve.textContent = avgBT;
+  stAve.textContent = avgST;
+  ctAve.textContent = avgCT;
+  ttAve.textContent = avgTT;
+  wtAve.textContent = avgWT;
+  rtAve.textContent = avgRT;
+}
+
+// clear set values in the table
+// does not clear at, bt, prio, or queue
+export function clearTableCalculations() {}

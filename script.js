@@ -5,6 +5,8 @@ import {
   resetInputs,
   showPriorityRows,
   showMLQRows,
+  displayTable,
+  calculateValues,
 } from "./table.js";
 
 // Important input variables
@@ -69,6 +71,11 @@ calculateBtn.addEventListener("click", () => {
 
   // process the processTable
   calculateTable(algoType, processTable);
+
+  // calculate tat, wt, rt to the chart first
+  calculateValues(ganttChart);
+  // display the calculated table
+  displayTable(ganttChart);
 });
 
 // Var for the table body to append rows to
@@ -160,11 +167,33 @@ function priority(process) {
     ) {
       readyQ.push(sortedProcess.shift());
     }
+
+    // --- Handling CPU Idle Time (if Ready Queue is empty) ---
+    if (readyQ.length === 0 && sortedProcess.length > 0) {
+      // If the CPU is idle, advance currentTime to the arrival time of the next process
+      currentAt = sortedProcess[0].arrivalTime;
+      // Now re-run the arrival check loop to populate the ready queue
+      continue;
+    }
+
     // sort for priority -> first child is the lowest priority & first position
     readyQ = sortProcessByP(readyQ);
 
-    currentAt += readyQ[0].burstTime;
-    ganttChart.push(readyQ.shift()); // push to gantt chart
+    const runningProcess = readyQ.shift();
+
+    // 4. Calculate and record the times
+
+    // The process starts when the CPU is currently available
+    runningProcess.startTime = currentAt;
+
+    // CT = Start Time + BT
+    runningProcess.completionTime = currentAt + runningProcess.burstTime;
+
+    // Update the CPU time to the time the running process finishes
+    currentAt = runningProcess.completionTime;
+
+    // 5. Push completed process to  Gantt Chart
+    ganttChart.push(runningProcess);
   }
   console.log("gantt");
   console.log(ganttChart);
