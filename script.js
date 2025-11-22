@@ -132,10 +132,11 @@ function calculateTable(algo, process) {
       break;
     case "sjf":
       console.log("sjf!");
+      sjfAlgorithm(process);
       break;
     case "priority":
       console.log("priority!");
-      priority(process);
+      priorityAlgorithm(process);
       break;
     case "deadline":
       console.log("deadline!");
@@ -147,8 +148,9 @@ function calculateTable(algo, process) {
 }
 
 // Algorithms
-// Add table update code here later
-function priority(process) {
+
+// PRIORITY ALGORITHM
+function priorityAlgorithm(process) {
   let readyQ = []; // for processes that already arrived at time AT
   let currentAt = 0;
 
@@ -224,4 +226,59 @@ function sortProcessByP(p) {
     return a.PID - b.PID;
   });
   return sortedProcess;
+}
+
+// SJF ALGORITHM
+function sjfAlgorithm(process) {
+  const processSize = process.length; // to be used to check all inputted processes
+  let currentTime = 0;
+  let completedCount = 0;
+
+  process.sort((a, b) => a.arrivalTime - b.arrivalTime);
+
+  ganttChart = [];
+
+  // console.log(completed);
+
+  // LOOP THROUGH ALL PROCESSES
+  while (completedCount < processSize) {
+    let processindex = -1; // NO PROCESS YET; USED TO TRACK CURRENT PROCESS
+    let minburstTime = Infinity; // INFINITY TO ENSURE THAT THIS IS THE HIGHEST VALUE POSSIBLE
+
+    // CHECK AND SORT EACH PROCESSES
+    for (let i = 0; i < processSize; i++) {
+      //CHECK IF ARRIVAL TIME IS ALREADY WITHIN CURRENT TIME & IF IT IS NOT YET COMPLETE
+      if (process[i].arrivalTime <= currentTime && !process[i].completionTime) {
+        // COMPARES AND SORTS BURSTTIME OF CURRENT PROCESS TO INFINITY (WHICH IS AUTOMATICALLY TRUE); TRUE = CHANGE BT VALUE
+        if (process[i].burstTime < minburstTime) {
+          minburstTime = process[i].burstTime; // NEW VALUE TO BE COMPARED TO THE NEXT BURST TIME
+          processindex = i;
+        }
+      }
+    }
+    // CPU IDLE
+    // CHECKS IF THERE IS NO RUNNING PROCESS CURRENTLY
+    if (processindex === -1) {
+      let nextArrivalTime = Infinity; // USE THE LARGEST NUMBER AVAILABLE
+      for (let i = 0; i < processSize; i++) {
+        if (!process[i].completionTime) {
+          nextArrivalTime = Math.min(nextArrivalTime, process[i].arrivalTime); // RETURNS SMALLER VALUE
+        }
+      }
+
+      // GET THE VALUE OF THE NEXT ARRIVAL TIME AS THE NEW CURRENT TIME
+      if (nextArrivalTime !== Infinity) {
+        currentTime = nextArrivalTime;
+      }
+      continue;
+    }
+
+    const runningProcess = process[processindex];
+    runningProcess.startTime = currentTime;
+    runningProcess.completionTime = currentTime + runningProcess.burstTime;
+    currentTime = runningProcess.completionTime;
+    ganttChart.push(runningProcess);
+
+    completedCount++;
+  }
 }
