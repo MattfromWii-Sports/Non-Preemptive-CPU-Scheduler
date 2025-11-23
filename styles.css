@@ -159,4 +159,32 @@ body {
   text-align: start;
   font-size: 0.9rem;
   padding-left: 2px;
+  margin-bottom: 1rem;
+}
+
+/* Gantt chart table */
+.gantt-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gantt-table {
+  border-collapse: collapse;
+  max-width: 100%;
+  table-layout: fixed;
+  display: flex;
+  justify-content: center;
+}
+.gantt-table td {
+  font-size: 0.9rem;
+  width: 40px;
+}
+.gantt-process td {
+  padding: 6px;
+  text-align: center;
+  border: 1px solid #aaa;
+  font-weight: bold;
+}
+.gantt-time td {
+  text-align: left;
 }

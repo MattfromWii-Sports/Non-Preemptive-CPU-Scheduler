@@ -7,6 +7,9 @@ import {
   showMLQRows,
   displayTable,
   calculateValues,
+  clearTableCalculations,
+  displayGanttChart,
+  clearGanttChart,
 } from "./table.js";
 
 // Important input variables
@@ -27,6 +30,9 @@ function updateInputVariables() {
 // Event listener -> Algorithm
 const selectAlgorithmBtn = document.getElementById("algorithm");
 selectAlgorithmBtn.addEventListener("change", () => {
+  // remove all calculated values from previous algos
+  clearTableCalculations();
+  clearGanttChart();
   // reset all columns
   resetColumns();
 
@@ -43,6 +49,10 @@ selectAlgorithmBtn.addEventListener("change", () => {
 // Event listener -> Process number
 const selectProcessBtn = document.getElementById("processnum");
 selectProcessBtn.addEventListener("change", () => {
+  // remove old gantt chart first
+  clearTableCalculations();
+  clearGanttChart();
+
   // check for input changes
   updateInputVariables();
 
@@ -60,6 +70,8 @@ calculateBtn.addEventListener("click", () => {
 
   // get updated inputs
   updateInputVariables();
+  // clear gantt chart
+  clearGanttChart();
 
   // verify if all inputs are filled correctly
   if (verifyInputs()) {
@@ -76,6 +88,7 @@ calculateBtn.addEventListener("click", () => {
   calculateValues(ganttChart);
   // display the calculated table
   displayTable(ganttChart);
+  displayGanttChart(ganttChart);
 });
 
 // Var for the table body to append rows to
@@ -151,6 +164,7 @@ function calculateTable(algo, process) {
 
 // PRIORITY ALGORITHM
 function priorityAlgorithm(process) {
+  ganttChart = []; // reset gantt chart
   let readyQ = []; // for processes that already arrived at time AT
   let currentAt = 0;
 
@@ -237,7 +251,6 @@ function sjfAlgorithm(process) {
   process.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
   ganttChart = [];
-
   // console.log(completed);
 
   // LOOP THROUGH ALL PROCESSES

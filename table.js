@@ -287,4 +287,86 @@ function calculateAvg(process) {
 
 // clear set values in the table
 // does not clear at, bt, prio, or queue
-export function clearTableCalculations() {}
+export function clearTableCalculations() {
+  // all other rows
+  const stA = document.querySelectorAll(".start-time");
+  const ctA = document.querySelectorAll(".completion-time");
+  const ttA = document.querySelectorAll(".turnaround-time");
+  const wtA = document.querySelectorAll(".waiting-time");
+  const rtA = document.querySelectorAll(".response-time");
+
+  // iterate through all classes above
+  const allProcessCells = [stA, ctA, ttA, wtA, rtA];
+  allProcessCells.forEach((nodeList) => {
+    nodeList.forEach((cell) => {
+      cell.textContent = "";
+    });
+  });
+
+  // average rows
+  const aAve = document.querySelector(".arrival-ave");
+  const bAve = document.querySelector(".burst-ave");
+  const stAve = document.querySelector(".start-ave");
+  const ctAve = document.querySelector(".completion-ave");
+  const ttAve = document.querySelector(".turnaround-ave");
+  const wtAve = document.querySelector(".waiting-ave");
+  const rtAve = document.querySelector(".response-ave");
+
+  // Update the text content of the cells
+  aAve.textContent = "";
+  bAve.textContent = "";
+  stAve.textContent = "";
+  ctAve.textContent = "";
+  ttAve.textContent = "";
+  wtAve.textContent = "";
+  rtAve.textContent = "";
+}
+
+// create ganttChart
+export function displayGanttChart(gantt) {
+  let st = 0;
+  gantt.forEach((process) => {
+    // first check if process goes after another process
+    if (process.startTime !== st) {
+      // add empty cell
+      addEmptyGanttCell(st);
+      st = process.startTime;
+    }
+
+    addGanttCell(process.PID, process.startTime);
+    st = process.completionTime;
+  });
+  // add last cell for time only
+  addEmptyGanttCell(st);
+}
+function addGanttCell(pid, st) {
+  const ganttProcessRow = document.querySelector(".gantt-process");
+  const ganttTimeRow = document.querySelector(".gantt-time");
+
+  const topCell = document.createElement("td");
+  topCell.textContent = `P${pid}`;
+  const bottomCell = document.createElement("td");
+  bottomCell.textContent = st;
+  ganttProcessRow.append(topCell);
+  ganttTimeRow.append(bottomCell);
+}
+function addEmptyGanttCell(st) {
+  const ganttProcessRow = document.querySelector(".gantt-process");
+  const ganttTimeRow = document.querySelector(".gantt-time");
+
+  const topCell = document.createElement("td");
+  // add empty cell styles here
+  const bottomCell = document.createElement("td");
+  bottomCell.textContent = st;
+  ganttProcessRow.append(topCell);
+  ganttTimeRow.append(bottomCell);
+}
+
+// clear ganttChart
+export function clearGanttChart() {
+  const ganttProcessRow = document.querySelector(".gantt-process");
+  const ganttTimeRow = document.querySelector(".gantt-time");
+
+  ganttProcessRow.innerHTML = "";
+  ganttTimeRow.innerHTML = "";
+}
