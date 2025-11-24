@@ -142,6 +142,7 @@ function calculateTable(algo, process) {
   switch (algo) {
     case "fcfs":
       console.log("fcfs!");
+      fcfsAlgorithm(process);
       break;
     case "sjf":
       console.log("sjf!");
@@ -292,6 +293,32 @@ function sjfAlgorithm(process) {
     currentTime = runningProcess.completionTime;
     ganttChart.push(runningProcess);
 
+    completedCount++;
+  }
+}
+
+// FCFS ALGORITHM
+function fcfsAlgorithm(process) {
+  const processSize = process.length;
+  let currentTime = 0;
+  let completedCount = 0;
+
+  process.sort((a, b) => a.arrivalTime - b.arrivalTime);
+
+  ganttChart = [];
+
+  while (completedCount < processSize) {
+    const runningProcess = process[completedCount];
+
+    if (runningProcess.arrivalTime > currentTime) {
+      currentTime = runningProcess.arrivalTime;
+    }
+
+    runningProcess.startTime = currentTime;
+    runningProcess.completionTime = currentTime + runningProcess.burstTime;
+    currentTime = runningProcess.completionTime;
+
+    ganttChart.push(runningProcess);
     completedCount++;
   }
 }
