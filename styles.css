@@ -120,7 +120,6 @@ body {
 .data-table td {
   border: 1px solid #ccc;
   text-align: center;
-  width: 12.5%; /* make all columns the same width*/
 }
 
 /* Style for the header */

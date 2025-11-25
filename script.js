@@ -10,6 +10,7 @@ import {
   clearTableCalculations,
   displayGanttChart,
   clearGanttChart,
+  showDeadlineRows,
 } from "./table.js";
 
 // Important input variables
@@ -39,8 +40,8 @@ selectAlgorithmBtn.addEventListener("change", () => {
   // Special cases: Priority, Deadline, MLQ
   if (selectAlgorithmBtn.value == "priority") {
     showPriorityRows();
-  } else if (selectAlgorithmBtn.value == "dealdine") {
-    // add table changes here
+  } else if (selectAlgorithmBtn.value == "deadline") {
+    showDeadlineRows();
   } else if (selectAlgorithmBtn.value == "mlq") {
     showMLQRows();
   }

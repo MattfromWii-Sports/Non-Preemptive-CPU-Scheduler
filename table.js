@@ -4,37 +4,13 @@ const tableMain = document.querySelector(".row-container");
 export function resetColumns() {
   resetInputs();
 
-  // Priority
-  const avePrioRow = document.querySelector(".priority-ave");
-  const priorityHeader = document.querySelector(".priority-header");
-  const priorityColumns = document.querySelectorAll(
-    ".data-table .priority-time"
-  );
-
-  avePrioRow.classList.add("hide");
-  priorityHeader.classList.add("hide");
-  priorityColumns.forEach((row) => {
-    if (!row.classList.contains("hide")) {
-      row.classList.add("hide");
+  // class "hideable" is used to signify all hideable columns
+  const allHideable = document.querySelectorAll(".hideable");
+  allHideable.forEach((elem) => {
+    if (!elem.classList.contains("hide")) {
+      elem.classList.add("hide");
     }
   });
-
-  // MLQ
-  const subqueueInt = document.querySelector(".mlq-suboptions");
-  subqueueInt.classList.add("hide");
-
-  const queueHeader = document.querySelector(".queue-header");
-  const aveQueueRow = document.querySelector(".queue-ave");
-  const queueColumns = document.querySelectorAll(".data-table .queue-num");
-
-  queueHeader.classList.add("hide");
-  queueColumns.forEach((row) => {
-    if (!row.classList.contains("hide")) {
-      row.classList.add("hide");
-    }
-  });
-  // add extra column in last row
-  aveQueueRow.classList.add("hide");
 }
 
 const errorDisplay = document.querySelector(".error-msg");
@@ -111,22 +87,27 @@ export function updateTableRows(algoType, numOfProcesses) {
     row.classList.add("table-row");
     row.innerHTML = `<td class="process">P${num}</td>
                   <td class="arrival-time">
-                    <input pattern="[0-9]*" />
-                  </td>
-                  <td class="burst-time">
-                    <input pattern="[0-9]*" />
-                  </td>
-                  <td class="priority-time hide">
-                    <input pattern="[0-9]*" />
-                  </td>
-                  <td class="queue-num hide">
-                    <input pattern="[0-9]*" />
-                  </td>
-                  <td class="start-time"></td>
-                  <td class="completion-time"></td>
-                  <td class="turnaround-time"></td>
-                  <td class="waiting-time"></td>
-                  <td class="response-time"></td>`;
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="burst-time">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="priority-time hide hideable">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="queue-num hide">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="deadline-time hide hideable">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="start-time"></td>
+                <td class="completion-time"></td>
+                <td class="turnaround-time"></td>
+                <td class="waiting-time"></td>
+                <td class="response-time"></td>
+                <td class="lateness-time hide hideable"></td>
+                <td class="tardiness-time hide hideable"></td>`;
     return row;
   }
   // Helper function to remove rows from nth (except for last row)
@@ -171,7 +152,59 @@ export function showPriorityRows() {
   avePrioRow.classList.remove("hide");
 }
 
+export function showDeadlineRows() {
+  // var for ave columns
+  const aveDeadlineRow = document.querySelector(".deadline-ave");
+  const aveLatenessRow = document.querySelector(".lateness-ave");
+  const aveTardinessRow = document.querySelector(".tardiness-ave");
+
+  aveDeadlineRow.classList.remove("hide");
+  aveLatenessRow.classList.remove("hide");
+  aveTardinessRow.classList.remove("hide");
+
+  // var for hidden columns
+  const deadlineHeader = document.querySelector(".deadline-header");
+  const latenessHeader = document.querySelector(".lateness-header");
+  const tardinessHeader = document.querySelector(".tardiness-header");
+
+  deadlineHeader.classList.remove("hide");
+  latenessHeader.classList.remove("hide");
+  tardinessHeader.classList.remove("hide");
+
+  // deadline column
+  const deadlineInputCells = document.querySelectorAll(
+    ".data-table .deadline-time"
+  );
+  deadlineInputCells.forEach((row) => {
+    // Only remove the hide class if it's currently hidden
+    if (row.classList.contains("hide")) {
+      row.classList.remove("hide");
+    }
+  });
+
+  // lateness column
+  const latenessOutputCells = document.querySelectorAll(
+    ".data-table .lateness-time"
+  );
+  latenessOutputCells.forEach((row) => {
+    if (row.classList.contains("hide")) {
+      row.classList.remove("hide");
+    }
+  });
+
+  // tardiness column
+  const tardinessOutputCells = document.querySelectorAll(
+    ".data-table .tardiness-time"
+  );
+  tardinessOutputCells.forEach((row) => {
+    if (row.classList.contains("hide")) {
+      row.classList.remove("hide");
+    }
+  });
+}
+
 export function showMLQRows() {
+  showPriorityRows();
   // var for left interface
   const subqueueInt = document.querySelector(".mlq-suboptions");
   subqueueInt.classList.remove("hide");
@@ -337,8 +370,13 @@ export function displayGanttChart(gantt) {
     st = process.completionTime;
   });
   // add last cell for time only
-  addEmptyGanttCell(st);
+  const ganttTimeRow = document.querySelector(".gantt-time");
+  const bottomCell = document.createElement("td");
+  bottomCell.textContent = st;
+  ganttTimeRow.append(bottomCell);
+  // addEmptyGanttCell(st);
 }
+// adds gantt process & time cell
 function addGanttCell(pid, st) {
   const ganttProcessRow = document.querySelector(".gantt-process");
   const ganttTimeRow = document.querySelector(".gantt-time");
@@ -350,6 +388,7 @@ function addGanttCell(pid, st) {
   ganttProcessRow.append(topCell);
   ganttTimeRow.append(bottomCell);
 }
+// adds gantt time cell with empty process id
 function addEmptyGanttCell(st) {
   const ganttProcessRow = document.querySelector(".gantt-process");
   const ganttTimeRow = document.querySelector(".gantt-time");

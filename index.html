@@ -24,28 +24,31 @@
               <option value="mlq">Multilevel Queue</option>
             </select>
           </form>
-          <form action="#" class="mlq-suboptions dropdown-container hide">
+          <form
+            action="#"
+            class="mlq-suboptions dropdown-container hide hideable"
+          >
             <!-- subqueues here -->
             <label for="subQueue1">Queue 1</label>
             <select name="subQueue1" id="subQueue1">
               <option value="fcfs" selected>First Come First Serve</option>
               <option value="sjf">Shortest Job First</option>
               <option value="priority">Priority</option>
-              <option value="deadline">Deadline</option>
+              <!-- <option value="deadline">Deadline</option> -->
             </select>
             <label for="subQueue2">Queue 2</label>
             <select name="subQueue2" id="subQueue2">
               <option value="fcfs" selected>First Come First Serve</option>
               <option value="sjf">Shortest Job First</option>
               <option value="priority">Priority</option>
-              <option value="deadline">Deadline</option>
+              <!-- <option value="deadline">Deadline</option> -->
             </select>
             <label for="subQueue3">Queue 3</label>
             <select name="subQueue3" id="subQueue3">
               <option value="fcfs" selected>First Come First Serve</option>
               <option value="sjf">Shortest Job First</option>
               <option value="priority">Priority</option>
-              <option value="deadline">Deadline</option>
+              <!-- <option value="deadline">Deadline</option> -->
             </select>
           </form>
           <!-- dropdown -->
@@ -75,19 +78,23 @@
 
         <div class="table-container">
           <!-- for table -->
+          <!-- "hideable" class represents all elements that can be hidden -->
           <table class="data-table">
             <thead>
               <tr class="header-row">
                 <th>Process ID</th>
                 <th>Arrival Time</th>
                 <th>Burst Time</th>
-                <th class="priority-header hide">Priority</th>
-                <th class="queue-header hide">Queue</th>
+                <th class="priority-header hide hideable">Priority</th>
+                <th class="queue-header hide hideable">Queue</th>
+                <th class="deadline-header hide hideable">Deadline</th>
                 <th>Start Time</th>
                 <th>Completion Time</th>
                 <th>Turnaround Time</th>
                 <th>Waiting Time</th>
                 <th>Response Time</th>
+                <th class="lateness-header hide hideable">Lateness</th>
+                <th class="tardiness-header hide hideable">Tardiness</th>
               </tr>
             </thead>
             <tbody class="row-container">
@@ -99,10 +106,13 @@
                 <td class="burst-time">
                   <input pattern="[0-9]*" />
                 </td>
-                <td class="priority-time hide">
+                <td class="priority-time hide hideable">
                   <input pattern="[0-9]*" />
                 </td>
                 <td class="queue-num hide">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="deadline-time hide hideable">
                   <input pattern="[0-9]*" />
                 </td>
                 <td class="start-time"></td>
@@ -110,6 +120,8 @@
                 <td class="turnaround-time"></td>
                 <td class="waiting-time"></td>
                 <td class="response-time"></td>
+                <td class="lateness-time hide hideable"></td>
+                <td class="tardiness-time hide hideable"></td>
               </tr>
               <tr class="table-row">
                 <td class="process">P2</td>
@@ -119,10 +131,13 @@
                 <td class="burst-time">
                   <input pattern="[0-9]*" />
                 </td>
-                <td class="priority-time hide">
+                <td class="priority-time hide hideable">
                   <input pattern="[0-9]*" />
                 </td>
                 <td class="queue-num hide">
+                  <input pattern="[0-9]*" />
+                </td>
+                <td class="deadline-time hide hideable">
                   <input pattern="[0-9]*" />
                 </td>
                 <td class="start-time"></td>
@@ -130,21 +145,25 @@
                 <td class="turnaround-time"></td>
                 <td class="waiting-time"></td>
                 <td class="response-time"></td>
+                <td class="lateness-time hide hideable"></td>
+                <td class="tardiness-time hide hideable"></td>
               </tr>
               <!-- add new rows before this -->
               <tr class="table-row-last">
                 <td>AVE</td>
                 <td class="arrival-ave"></td>
                 <td class="burst-ave"></td>
-                <td class="priority-ave hide"></td>
-                <td class="queue-ave hide"></td>
+                <td class="priority-ave hide hideable"></td>
+                <td class="queue-ave hide hideable"></td>
+                <td class="deadline-ave hide hideable"></td>
                 <td class="start-ave"></td>
                 <td class="completion-ave"></td>
                 <td class="turnaround-ave"></td>
                 <td class="waiting-ave"></td>
                 <td class="response-ave"></td>
+                <td class="lateness-ave hide hideable"></td>
+                <td class="tardiness-ave hide hideable"></td>
               </tr>
-
               <!--  -->
             </tbody>
           </table>
