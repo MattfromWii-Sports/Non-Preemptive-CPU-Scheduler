@@ -71,6 +71,7 @@ calculateBtn.addEventListener("click", () => {
 
   // get updated inputs
   updateInputVariables();
+  updateSubQueueAlgorithms();
   // clear gantt chart
   clearGanttChart();
 
@@ -320,6 +321,188 @@ function fcfsAlgorithm(process) {
     currentTime = runningProcess.completionTime;
 
     ganttChart.push(runningProcess);
+    completedCount++;
+  }
+}
+
+
+//**************************************************************************************************** */
+
+//Important Variables for Sub Queues
+let algoSQ1 = "fcfs"; //default val
+let algoSQ2 = "fcfs"; //default val
+
+//Function to update the subqueues
+function updateSubQueueAlgorithms() {
+  let subAlgorithm1 = document.getElementById("subQueue1");
+  let subAlgorithm2 = document.getElementById("subQueue2");
+
+  algoSQ1 = subAlgorithm1.value;
+  algoSQ2 = subAlgorithm2.value;
+}
+
+let mlqRunningQueue = [];
+let globaltime = 0;
+let mlqCurrentTime = 0;
+//MLQ Algorithm
+function mlqAlgorithm(process, subQueue1, subQueue2) {
+
+  //Sort processes by arrival time
+  process = sortProcessByAT(process);
+
+
+  //sub Queues
+  let Queue1 = [];
+  let Queue2 = [];
+
+  //Insert all process according to their Queue Number
+  for (let selectedProcess = 0; selectedProcess < process.length; selectedProcess++) {
+    //Insert based on Queue Number
+    switch (process[selectedProcess].queueNum) {
+      case 1:
+        Queue1.push(process[selectedProcess]);
+        break;
+      case 2:
+        Queue2.push(process[selectedProcess]);
+        break;
+    }
+  }
+
+  //Add the earliest arrival time of the PID
+  globaltime += process[0].arrivalTime;
+
+  let anyProcessed; // This variable is used to check if any of the processes were inserted in this while loop
+
+  //This is where the processing begins.
+  while (Queue1.length !== 0 || Queue2.length !== 0) {
+
+    anyProcessed = false;
+
+    //Insert all the applicable process of Queue1
+    while (Queue1.length > 0 && Queue1[0].arrivalTime <= globaltime) {
+        globaltime += Queue1[0].burstTime;
+        mlqRunningQueue.push(Queue1.shift());
+        anyProcessed = true;
+    }
+
+    //Execute the current running process
+    if (mlqRunningQueue.length > 0) {
+      switch (subQueue1) {
+        case "fcfs":
+          mlqFCFS(mlqRunningQueue);
+          break;
+        case "sjf":
+          mlqSJF(mlqRunningQueue);
+          break;
+      }
+    }
+
+    //Clear mlqRunningQueue
+    mlqRunningQueue = [];
+
+    //Insert all the applicable process of Queue2
+    while (Queue2.length > 0 && Queue2[0].arrivalTime <= globaltime) {
+        globaltime += Queue2[0].burstTime;
+        mlqRunningQueue.push(Queue2.shift());
+        anyProcessed = true;
+    }
+
+    //Execute the current running process
+    if (mlqRunningQueue.length > 0) {
+      switch (subQueue2) {
+        case "fcfs":
+          mlqFCFS(mlqRunningQueue);
+          break;
+        case "sjf":
+          mlqSJF(mlqRunningQueue);
+          break;
+      }
+    }
+
+    //Clear mlqRunningQueue
+    mlqRunningQueue = [];
+
+
+    if (anyProcessed === false) {
+      globaltime += 1;
+    }
+
+  }
+
+}
+
+
+//MLQ FCFS
+function mlqFCFS(process) {
+  const processSize = process.length;
+  let completedCount = 0;
+
+  process.sort((a, b) => a.arrivalTime - b.arrivalTime);
+
+  while (completedCount < processSize) {
+    const runningProcess = process[completedCount];
+
+    if (runningProcess.arrivalTime > mlqCurrentTime) {
+      mlqCurrentTime = runningProcess.arrivalTime;
+    }
+
+    runningProcess.startTime = mlqCurrentTime;
+    runningProcess.completionTime = mlqCurrentTime + runningProcess.burstTime;
+    mlqCurrentTime = runningProcess.completionTime;
+
+    ganttChart.push(runningProcess);
+    completedCount++;
+  }
+}
+
+//MLQ SJF
+function mlqSJF(process) {
+  const processSize = process.length; // to be used to check all inputted processes
+  let completedCount = 0;
+
+  process.sort((a, b) => a.arrivalTime - b.arrivalTime);
+
+  // console.log(completed);
+
+  // LOOP THROUGH ALL PROCESSES
+  while (completedCount < processSize) {
+    let processindex = -1; // NO PROCESS YET; USED TO TRACK CURRENT PROCESS
+    let minburstTime = Infinity; // INFINITY TO ENSURE THAT THIS IS THE HIGHEST VALUE POSSIBLE
+
+    // CHECK AND SORT EACH PROCESSES
+    for (let i = 0; i < processSize; i++) {
+      //CHECK IF ARRIVAL TIME IS ALREADY WITHIN CURRENT TIME & IF IT IS NOT YET COMPLETE
+      if (process[i].arrivalTime <= mlqCurrentTime && !process[i].completionTime) {
+        // COMPARES AND SORTS BURSTTIME OF CURRENT PROCESS TO INFINITY (WHICH IS AUTOMATICALLY TRUE); TRUE = CHANGE BT VALUE
+        if (process[i].burstTime < minburstTime) {
+          minburstTime = process[i].burstTime; // NEW VALUE TO BE COMPARED TO THE NEXT BURST TIME
+          processindex = i;
+        }
+      }
+    }
+    // CPU IDLE
+    // CHECKS IF THERE IS NO RUNNING PROCESS CURRENTLY
+    if (processindex === -1) {
+      let nextArrivalTime = Infinity; // USE THE LARGEST NUMBER AVAILABLE
+      for (let i = 0; i < processSize; i++) {
+        if (!process[i].completionTime) {
+          nextArrivalTime = Math.min(nextArrivalTime, process[i].arrivalTime); // RETURNS SMALLER VALUE
+        }
+      }
+
+      // GET THE VALUE OF THE NEXT ARRIVAL TIME AS THE NEW CURRENT TIME
+      if (nextArrivalTime !== Infinity) {
+        mlqCurrentTime = nextArrivalTime;
+      }
+      continue;
+    }
+
+    const runningProcess = process[processindex];
+    runningProcess.startTime = mlqCurrentTime;
+    runningProcess.completionTime = mlqCurrentTime + runningProcess.burstTime;
+    mlqCurrentTime = runningProcess.completionTime;
+    ganttChart.push(runningProcess);
+
     completedCount++;
   }
 }
