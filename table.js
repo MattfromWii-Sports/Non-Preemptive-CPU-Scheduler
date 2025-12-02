@@ -69,7 +69,10 @@ export function updateTableRows(algoType, numOfProcesses) {
     showPriorityRows();
   } else if (algoType == "mlq") {
     showMLQRows();
+  } else if (algoType == "deadline") {
+    showDeadlineRows();
   }
+
 
   // Helper function to add empty rows
   function addRowFrom(startNum, endNum) {
@@ -245,12 +248,17 @@ export function displayTable(process) {
       const tt = row.querySelector(".turnaround-time");
       const wt = row.querySelector(".waiting-time");
       const rt = row.querySelector(".response-time");
+      const lt = row.querySelector(".lateness-time");
+      const tard = row.querySelector(".tardiness-time");
+
 
       st.textContent = matchingProcess.startTime;
       ct.textContent = matchingProcess.completionTime;
       tt.textContent = matchingProcess.turnaroundTime;
       wt.textContent = matchingProcess.waitingTime;
       rt.textContent = matchingProcess.responseTime;
+      lt.textContent = matchingProcess.lateness;
+      tard.textContent = matchingProcess.tardiness;
     }
   });
 
@@ -327,9 +335,11 @@ export function clearTableCalculations() {
   const ttA = document.querySelectorAll(".turnaround-time");
   const wtA = document.querySelectorAll(".waiting-time");
   const rtA = document.querySelectorAll(".response-time");
+  const ltA = document.querySelectorAll(".lateness-time");
+  const tardA = document.querySelectorAll(".tardiness-time");
 
   // iterate through all classes above
-  const allProcessCells = [stA, ctA, ttA, wtA, rtA];
+  const allProcessCells = [stA, ctA, ttA, wtA, rtA, ltA, tardA];
   allProcessCells.forEach((nodeList) => {
     nodeList.forEach((cell) => {
       cell.textContent = "";
