@@ -506,3 +506,96 @@ function mlqSJF(process) {
     completedCount++;
   }
 }
+
+// Deadline Algo
+function deadlineAlgorithm(process) {
+  ganttChart = []; // reset gantt chart
+  let readyQ = []; // for processes that already arrived at time AT
+  let currentAt = 0;
+
+
+  // sort the processes by AT
+  const sortedProcess = sortProcessByAT(process);
+  currentAt = sortedProcess[0].arrivalTime;
+
+
+  // console.log(sortedProcess);
+
+
+  while (readyQ.length > 0 || sortedProcess.length > 0) {
+    // get the first processes = lowest AT & Priority
+    // get all processes that arrived before or during time AT
+    while (
+      sortedProcess.length !== 0 &&
+      sortedProcess[0].arrivalTime <= currentAt
+    ) {
+      readyQ.push(sortedProcess.shift());
+    }
+
+
+    // --- Handling CPU Idle Time (if Ready Queue is empty) ---
+    if (readyQ.length === 0 && sortedProcess.length > 0) {
+      // If the CPU is idle, advance currentTime to the arrival time of the next process
+      currentAt = sortedProcess[0].arrivalTime;
+      // Now re-run the arrival check loop to populate the ready queue
+      continue;
+    }
+
+
+    // sort for priority -> first child is the lowest priority & first position
+    readyQ = sortProcessByDeadline(readyQ);
+
+
+    const runningProcess = readyQ.shift();
+
+
+    // 4. Calculate and record the times
+
+
+    // The process starts when the CPU is currently available
+    runningProcess.startTime = currentAt;
+
+
+    // CT = Start Time + BT
+    runningProcess.completionTime = currentAt + runningProcess.burstTime;
+
+
+    // Lateness = CT - Deadline
+    runningProcess.lateness =
+      runningProcess.completionTime - runningProcess.deadline;
+
+
+    // Tardiness
+    if (runningProcess.lateness <= 0) {
+      runningProcess.tardiness = 0;
+    } else {
+      runningProcess.tardiness = runningProcess.lateness;
+    }
+
+
+    // Update the CPU time to the time the running process finishes
+    currentAt = runningProcess.completionTime;
+
+
+    // 5. Push completed process to  Gantt Chart
+    ganttChart.push(runningProcess);
+  }
+  console.log("gantt");
+  console.log(ganttChart);
+}
+
+
+function sortProcessByDeadline(d) {
+  const sortedProcess = d.sort((a, b) => {
+    // sort by arrival time
+    if (a.deadline !== b.deadline) {
+      return a.deadline - b.deadline;
+    }
+
+
+    //Tie-breaker: first entered order)
+    return a.PID - b.PID;
+  });
+  return sortedProcess;
+}
+
