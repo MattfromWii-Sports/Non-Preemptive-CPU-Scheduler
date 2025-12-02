@@ -356,12 +356,18 @@ function updateSubQueueAlgorithms() {
 let mlqRunningQueue = [];
 let globaltime = 0;
 let mlqCurrentTime = 0;
+
 //MLQ Algorithm
 function mlqAlgorithm(process, subQueue1, subQueue2) {
 
   //Sort processes by arrival time
   process = sortProcessByAT(process);
 
+  //reset
+  ganttChart = []; 
+  mlqRunningQueue = [];
+  globaltime = 0;
+  mlqCurrentTime = 0;
 
   //sub Queues
   let Queue1 = [];
