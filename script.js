@@ -112,6 +112,9 @@ function getProcessData() {
     const priority_input = row.querySelector(".priority-time input");
     let priorityTime = 0;
 
+    const deadline_input = row.querySelector(".deadline-time input");
+    let deadlineTime = 0;
+
     const queue_input = row.querySelector(".queue-num input");
     let queueNum = 0;
 
@@ -120,7 +123,10 @@ function getProcessData() {
       priorityTime = parseInt(priority_input.value) || 0;
     } else if (algoType == "mlq") {
       queueNum = parseInt(queue_input.value) || 0;
+    }else if (algoType == "deadline") {
+      deadlineTime = parseInt(deadline_input.value) || 0;
     }
+
 
     processes.push({
       PID: index + 1,
@@ -133,6 +139,9 @@ function getProcessData() {
       turnaroundTime: null,
       waitingTime: null,
       responseTime: null,
+      deadline: deadlineTime,
+      lateness: null,
+      tardiness: null,
     });
   });
   console.log(processes); // for testing
@@ -156,9 +165,12 @@ function calculateTable(algo, process) {
       break;
     case "deadline":
       console.log("deadline!");
+      deadlineAlgorithm(process);
       break;
     case "mlq":
       console.log("mlq!");
+      mlqAlgorithm(process, algoSQ1, algoSQ2);
+
       break;
   }
 }
@@ -518,10 +530,6 @@ function deadlineAlgorithm(process) {
   const sortedProcess = sortProcessByAT(process);
   currentAt = sortedProcess[0].arrivalTime;
 
-
-  // console.log(sortedProcess);
-
-
   while (readyQ.length > 0 || sortedProcess.length > 0) {
     // get the first processes = lowest AT & Priority
     // get all processes that arrived before or during time AT
@@ -531,7 +539,6 @@ function deadlineAlgorithm(process) {
     ) {
       readyQ.push(sortedProcess.shift());
     }
-
 
     // --- Handling CPU Idle Time (if Ready Queue is empty) ---
     if (readyQ.length === 0 && sortedProcess.length > 0) {
@@ -550,8 +557,6 @@ function deadlineAlgorithm(process) {
 
 
     // 4. Calculate and record the times
-
-
     // The process starts when the CPU is currently available
     runningProcess.startTime = currentAt;
 
@@ -561,9 +566,7 @@ function deadlineAlgorithm(process) {
 
 
     // Lateness = CT - Deadline
-    runningProcess.lateness =
-      runningProcess.completionTime - runningProcess.deadline;
-
+    runningProcess.lateness = runningProcess.completionTime - runningProcess.deadline;
 
     // Tardiness
     if (runningProcess.lateness <= 0) {
@@ -572,10 +575,8 @@ function deadlineAlgorithm(process) {
       runningProcess.tardiness = runningProcess.lateness;
     }
 
-
     // Update the CPU time to the time the running process finishes
     currentAt = runningProcess.completionTime;
-
 
     // 5. Push completed process to  Gantt Chart
     ganttChart.push(runningProcess);
