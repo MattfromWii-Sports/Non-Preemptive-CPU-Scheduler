@@ -73,7 +73,6 @@ export function updateTableRows(algoType, numOfProcesses) {
     showDeadlineRows();
   }
 
-
   // Helper function to add empty rows
   function addRowFrom(startNum, endNum) {
     const lastRow = tableMain.lastElementChild; // get last row = average row
@@ -251,7 +250,6 @@ export function displayTable(process) {
       const lt = row.querySelector(".lateness-time");
       const tard = row.querySelector(".tardiness-time");
 
-
       st.textContent = matchingProcess.startTime;
       ct.textContent = matchingProcess.completionTime;
       tt.textContent = matchingProcess.turnaroundTime;
@@ -285,6 +283,8 @@ function calculateAvg(process) {
   let totalTT = 0;
   let totalWT = 0;
   let totalRT = 0;
+  let totalLT = 0;
+  let totalTARD = 0;
   const count = process.length;
 
   process.forEach((p) => {
@@ -296,6 +296,8 @@ function calculateAvg(process) {
     totalTT += p.turnaroundTime;
     totalWT += p.waitingTime;
     totalRT += p.responseTime;
+    totalLT += p.lateness;
+    totalTARD += p.tardiness;
   });
 
   // Calculate averages
@@ -306,6 +308,8 @@ function calculateAvg(process) {
   const avgTT = (totalTT / count).toFixed(2);
   const avgWT = (totalWT / count).toFixed(2);
   const avgRT = (totalRT / count).toFixed(2);
+  const avgLT = (totalLT / count).toFixed(2);
+  const avgTARD = (totalTARD / count).toFixed(2);
 
   // display averages
   const aAve = document.querySelector(".arrival-ave");
@@ -315,6 +319,8 @@ function calculateAvg(process) {
   const ttAve = document.querySelector(".turnaround-ave");
   const wtAve = document.querySelector(".waiting-ave");
   const rtAve = document.querySelector(".response-ave");
+  const ltAve = document.querySelector(".lateness-ave");
+  const tardAve = document.querySelector(".tardiness-ave");
 
   // Update the text content of the cells
   aAve.textContent = avgAT;
@@ -324,6 +330,8 @@ function calculateAvg(process) {
   ttAve.textContent = avgTT;
   wtAve.textContent = avgWT;
   rtAve.textContent = avgRT;
+  ltAve.textContent = avgLT;
+  tardAve.textContent = avgTARD;
 }
 
 // clear set values in the table
@@ -354,6 +362,7 @@ export function clearTableCalculations() {
   const ttAve = document.querySelector(".turnaround-ave");
   const wtAve = document.querySelector(".waiting-ave");
   const rtAve = document.querySelector(".response-ave");
+  const ltAve = document.querySelector(".lateness-ave");
 
   // Update the text content of the cells
   aAve.textContent = "";
@@ -363,6 +372,7 @@ export function clearTableCalculations() {
   ttAve.textContent = "";
   wtAve.textContent = "";
   rtAve.textContent = "";
+  ltAve.textContent = "";
 }
 
 // create ganttChart
