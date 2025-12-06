@@ -315,24 +315,26 @@ function sjfAlgorithm(process) {
 
 // FCFS ALGORITHM
 function fcfsAlgorithm(process) {
-  const processSize = process.length;
-  let currentTime = 0;
-  let completedCount = 0;
+  const processSize = process.length; // Stores the number of processes
+  let currentTime = 0; // Current running time (Gantt Chart)
+  let completedCount = 0; // How many processes are completed
 
-  process.sort((a, b) => a.arrivalTime - b.arrivalTime);
+  process.sort((a, b) => a.arrivalTime - b.arrivalTime); // Sorts the arrival time in ascending
 
   ganttChart = [];
 
+  // Loops through all the processes
   while (completedCount < processSize) {
-    const runningProcess = process[completedCount];
+    const runningProcess = process[completedCount]; // Selects the next process as indicated by process[completedCount]
 
+    // If arrivalTime is higher than current time, CPU idle
     if (runningProcess.arrivalTime > currentTime) {
       currentTime = runningProcess.arrivalTime;
     }
 
     runningProcess.startTime = currentTime;
     runningProcess.completionTime = currentTime + runningProcess.burstTime;
-    currentTime = runningProcess.completionTime;
+    currentTime = runningProcess.completionTime; // Next process
 
     ganttChart.push(runningProcess);
     completedCount++;
