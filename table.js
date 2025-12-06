@@ -93,6 +93,7 @@ export function updateTableRows(algoType, numOfProcesses) {
   if (algoType == "priority") {
     showPriorityRows();
   } else if (algoType == "mlq") {
+    showPriorityRows();
     showMLQRows();
   } else if (algoType == "deadline") {
     showDeadlineRows();
