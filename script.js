@@ -43,6 +43,7 @@ selectAlgorithmBtn.addEventListener("change", () => {
   } else if (selectAlgorithmBtn.value == "deadline") {
     showDeadlineRows();
   } else if (selectAlgorithmBtn.value == "mlq") {
+    showPriorityRows();
     showMLQRows();
   }
 });
@@ -122,6 +123,7 @@ function getProcessData() {
     if (algoType == "priority") {
       priorityTime = parseInt(priority_input.value) || 0;
     } else if (algoType == "mlq") {
+      priorityTime = parseInt(priority_input.value) || 0;
       queueNum = parseInt(queue_input.value) || 0;
     }else if (algoType == "deadline") {
       deadlineTime = parseInt(deadline_input.value) || 0;
@@ -362,12 +364,14 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
 
   //Sort processes by arrival time
   process = sortProcessByAT(process);
+  console.log("Prio:");
+  console.log(process);
 
   //reset
   ganttChart = []; 
   mlqRunningQueue = [];
   globaltime = 0;
-  mlqCurrentTime = 0;
+  mlqCurrentTime = 0; //Time for FCFS and SJF
 
   //sub Queues
   let Queue1 = [];
@@ -396,6 +400,8 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
 
     anyProcessed = false;
 
+    mlqCurrentTime = globaltime; //Current time without adding the BT
+
     //Insert all the applicable process of Queue1
     while (Queue1.length > 0 && Queue1[0].arrivalTime <= globaltime) {
         globaltime += Queue1[0].burstTime;
@@ -412,11 +418,16 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
         case "sjf":
           mlqSJF(mlqRunningQueue);
           break;
+        case "priority":
+          mlqPriority(mlqRunningQueue, mlqCurrentTime);
+          break;
       }
     }
 
     //Clear mlqRunningQueue
     mlqRunningQueue = [];
+
+    mlqCurrentTime = globaltime; //Current time without adding the BT
 
     //Insert all the applicable process of Queue2
     while (Queue2.length > 0 && Queue2[0].arrivalTime <= globaltime) {
@@ -433,6 +444,9 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
           break;
         case "sjf":
           mlqSJF(mlqRunningQueue);
+          break;
+        case "priority":
+          mlqPriority(mlqRunningQueue, mlqCurrentTime);
           break;
       }
     }
@@ -522,6 +536,57 @@ function mlqSJF(process) {
     ganttChart.push(runningProcess);
 
     completedCount++;
+  }
+}
+
+//MLQ Priority 
+function mlqPriority(process, currentRunningTime) {
+  let readyQ = []; // for processes that already arrived at time AT
+  let currentAt = currentRunningTime;
+
+  console.log("currentAt:" + currentAt);
+
+  // sort the processes by AT
+  const sortedProcess = sortProcessByAT(process);
+
+  // console.log(sortedProcess);
+
+  while (readyQ.length > 0 || sortedProcess.length > 0) {
+    // get the first processes = lowest AT & Priority
+    // get all processes that arrived before or during time AT
+    while (
+      sortedProcess.length !== 0 &&
+      sortedProcess[0].arrivalTime <= currentAt
+    ) {
+      readyQ.push(sortedProcess.shift());
+    }
+
+    // --- Handling CPU Idle Time (if Ready Queue is empty) ---
+    if (readyQ.length === 0 && sortedProcess.length > 0) {
+      // If the CPU is idle, advance currentTime to the arrival time of the next process
+      currentAt = sortedProcess[0].arrivalTime;
+      // Now re-run the arrival check loop to populate the ready queue
+      continue;
+    }
+
+    // sort for priority -> first child is the lowest priority & first position
+    readyQ = sortProcessByP(readyQ);
+
+    const runningProcess = readyQ.shift();
+
+    // 4. Calculate and record the times
+
+    // The process starts when the CPU is currently available
+    runningProcess.startTime = currentAt;
+
+    // CT = Start Time + BT
+    runningProcess.completionTime = currentAt + runningProcess.burstTime;
+
+    // Update the CPU time to the time the running process finishes
+    currentAt = runningProcess.completionTime;
+
+    // 5. Push completed process to  Gantt Chart
+    ganttChart.push(runningProcess);
   }
 }
 
