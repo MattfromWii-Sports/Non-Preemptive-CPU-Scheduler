@@ -15,13 +15,17 @@ export function resetColumns() {
 
 const errorDisplay = document.querySelector(".error-msg");
 let hasError = false; // for table
+let hasMLQError = false; // for table with mlq
 // check if inputs are wrong or empty
 export function verifyInputs() {
   const allInputs = tableMain.querySelectorAll("input");
 
+  // reset error state first
   hasError = false;
+  hasMLQError = false; // if user inputs a number greater than 2
   errorDisplay.textContent = "";
 
+  // check all inputs again
   allInputs.forEach((input) => {
     input.style.backgroundColor = "white";
     const val = input.value;
@@ -35,9 +39,30 @@ export function verifyInputs() {
     }
   });
 
+  // check mlq queue inputs
+  const mlqInputs = tableMain.querySelectorAll(".queue-num > input");
+  mlqInputs.forEach((input) => {
+    const val = input.value;
+    if (input.parentElement.classList.contains("hide")) {
+      // ignore hidden columns
+      return;
+    }
+    if (val != 1 && val != 2) {
+      input.style.backgroundColor = "#ffcccc";
+      hasError = true;
+      hasMLQError = true;
+    }
+  });
+
+  let errorText = "";
+  // determine the error message: with MLQ error or without
   if (hasError) {
-    errorDisplay.textContent = "Invalid Inputs";
+    errorText = "Invalid Inputs";
   }
+  if (hasMLQError) {
+    errorText += ", Invalid Queue Number";
+  }
+  errorDisplay.textContent = errorText;
   return hasError;
 }
 export function resetInputs() {
@@ -206,7 +231,13 @@ export function showDeadlineRows() {
 }
 
 export function showMLQRows() {
-  showPriorityRows();
+  // check if priority is selected in one of the subqueues
+  const subAlgorithm1 = document.getElementById("subQueue1");
+  const subAlgorithm2 = document.getElementById("subQueue2");
+  if (subAlgorithm1.value == "priority" || subAlgorithm2.value == "priority") {
+    showPriorityRows();
+  }
+
   // var for left interface
   const subqueueInt = document.querySelector(".mlq-suboptions");
   subqueueInt.classList.remove("hide");
