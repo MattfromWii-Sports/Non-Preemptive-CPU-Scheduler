@@ -604,7 +604,7 @@ function deadlineAlgorithm(process) {
   currentAt = sortedProcess[0].arrivalTime;
 
   while (readyQ.length > 0 || sortedProcess.length > 0) {
-    // get the first processes = lowest AT & Priority
+    // get the first processes = lowest AT & deadline
     // get all processes that arrived before or during time AT
     while (
       sortedProcess.length !== 0 &&
@@ -622,7 +622,7 @@ function deadlineAlgorithm(process) {
     }
 
 
-    // sort for priority -> first child is the lowest priority & first position
+    // sort for deadline  -> first child is the lowest priority & first position
     readyQ = sortProcessByDeadline(readyQ);
 
 
