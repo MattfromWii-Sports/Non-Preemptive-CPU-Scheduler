@@ -395,6 +395,7 @@ export function clearTableCalculations() {
   const wtAve = document.querySelector(".waiting-ave");
   const rtAve = document.querySelector(".response-ave");
   const ltAve = document.querySelector(".lateness-ave");
+  const tardAve = document.querySelectorAll(".tardiness-ave");
 
   // Update the text content of the cells
   aAve.textContent = "";
@@ -405,6 +406,7 @@ export function clearTableCalculations() {
   wtAve.textContent = "";
   rtAve.textContent = "";
   ltAve.textContent = "";
+  tardAve.textContent = "";
 }
 
 // create ganttChart
