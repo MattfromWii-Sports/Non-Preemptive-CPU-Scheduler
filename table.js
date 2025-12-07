@@ -395,7 +395,7 @@ export function clearTableCalculations() {
   const wtAve = document.querySelector(".waiting-ave");
   const rtAve = document.querySelector(".response-ave");
   const ltAve = document.querySelector(".lateness-ave");
-  const tardAve = document.querySelectorAll(".tardiness-ave");
+  const tardAve = document.querySelector(".tardiness-ave");
 
   // Update the text content of the cells
   aAve.textContent = "";
