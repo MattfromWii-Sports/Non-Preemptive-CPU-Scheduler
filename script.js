@@ -43,7 +43,6 @@ selectAlgorithmBtn.addEventListener("change", () => {
   } else if (selectAlgorithmBtn.value == "deadline") {
     showDeadlineRows();
   } else if (selectAlgorithmBtn.value == "mlq") {
-    showPriorityRows();
     showMLQRows();
   }
 });
@@ -94,6 +93,19 @@ calculateBtn.addEventListener("click", () => {
   displayGanttChart(ganttChart);
 });
 
+// Event Listener for the MLQ subqueues
+// Note showMLQRows already handles the columns to be displayed like priority
+const subQueue1 = document.getElementById("subQueue1");
+const subQueue2 = document.getElementById("subQueue2");
+subQueue1.addEventListener("change", () => {
+  resetColumns();
+  showMLQRows();
+});
+subQueue2.addEventListener("change", () => {
+  resetColumns();
+  showMLQRows();
+});
+
 // Var for the table body to append rows to
 const tableMain = document.querySelector(".row-container");
 
@@ -125,10 +137,9 @@ function getProcessData() {
     } else if (algoType == "mlq") {
       priorityTime = parseInt(priority_input.value) || 0;
       queueNum = parseInt(queue_input.value) || 0;
-    }else if (algoType == "deadline") {
+    } else if (algoType == "deadline") {
       deadlineTime = parseInt(deadline_input.value) || 0;
     }
-
 
     processes.push({
       PID: index + 1,
@@ -341,7 +352,6 @@ function fcfsAlgorithm(process) {
   }
 }
 
-
 //**************************************************************************************************** */
 
 //Important Variables for Sub Queues
@@ -363,14 +373,13 @@ let mlqCurrentTime = 0;
 
 //MLQ Algorithm
 function mlqAlgorithm(process, subQueue1, subQueue2) {
-
   //Sort processes by arrival time
   process = sortProcessByAT(process);
   console.log("Prio:");
   console.log(process);
 
   //reset
-  ganttChart = []; 
+  ganttChart = [];
   mlqRunningQueue = [];
   globaltime = 0;
   mlqCurrentTime = 0; //Time for FCFS and SJF
@@ -380,7 +389,11 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
   let Queue2 = [];
 
   //Insert all process according to their Queue Number
-  for (let selectedProcess = 0; selectedProcess < process.length; selectedProcess++) {
+  for (
+    let selectedProcess = 0;
+    selectedProcess < process.length;
+    selectedProcess++
+  ) {
     //Insert based on Queue Number
     switch (process[selectedProcess].queueNum) {
       case 1:
@@ -399,16 +412,15 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
 
   //This is where the processing begins.
   while (Queue1.length !== 0 || Queue2.length !== 0) {
-
     anyProcessed = false;
 
     mlqCurrentTime = globaltime; //Current time without adding the BT
 
     //Insert all the applicable process of Queue1
     while (Queue1.length > 0 && Queue1[0].arrivalTime <= globaltime) {
-        globaltime += Queue1[0].burstTime;
-        mlqRunningQueue.push(Queue1.shift());
-        anyProcessed = true;
+      globaltime += Queue1[0].burstTime;
+      mlqRunningQueue.push(Queue1.shift());
+      anyProcessed = true;
     }
 
     //Execute the current running process
@@ -433,9 +445,9 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
 
     //Insert all the applicable process of Queue2
     while (Queue2.length > 0 && Queue2[0].arrivalTime <= globaltime) {
-        globaltime += Queue2[0].burstTime;
-        mlqRunningQueue.push(Queue2.shift());
-        anyProcessed = true;
+      globaltime += Queue2[0].burstTime;
+      mlqRunningQueue.push(Queue2.shift());
+      anyProcessed = true;
     }
 
     //Execute the current running process
@@ -456,15 +468,11 @@ function mlqAlgorithm(process, subQueue1, subQueue2) {
     //Clear mlqRunningQueue
     mlqRunningQueue = [];
 
-
     if (anyProcessed === false) {
       globaltime += 1;
     }
-
   }
-
 }
-
 
 //MLQ FCFS
 function mlqFCFS(process) {
@@ -506,7 +514,10 @@ function mlqSJF(process) {
     // CHECK AND SORT EACH PROCESSES
     for (let i = 0; i < processSize; i++) {
       //CHECK IF ARRIVAL TIME IS ALREADY WITHIN CURRENT TIME & IF IT IS NOT YET COMPLETE
-      if (process[i].arrivalTime <= mlqCurrentTime && !process[i].completionTime) {
+      if (
+        process[i].arrivalTime <= mlqCurrentTime &&
+        !process[i].completionTime
+      ) {
         // COMPARES AND SORTS BURSTTIME OF CURRENT PROCESS TO INFINITY (WHICH IS AUTOMATICALLY TRUE); TRUE = CHANGE BT VALUE
         if (process[i].burstTime < minburstTime) {
           minburstTime = process[i].burstTime; // NEW VALUE TO BE COMPARED TO THE NEXT BURST TIME
@@ -541,7 +552,7 @@ function mlqSJF(process) {
   }
 }
 
-//MLQ Priority 
+//MLQ Priority
 function mlqPriority(process, currentRunningTime) {
   let readyQ = []; // for processes that already arrived at time AT
   let currentAt = currentRunningTime;
@@ -598,7 +609,6 @@ function deadlineAlgorithm(process) {
   let readyQ = []; // for processes that already arrived at time AT
   let currentAt = 0;
 
-
   // sort the processes by AT
   const sortedProcess = sortProcessByAT(process);
   currentAt = sortedProcess[0].arrivalTime;
@@ -621,25 +631,21 @@ function deadlineAlgorithm(process) {
       continue;
     }
 
-
     // sort for deadline  -> first child is the lowest priority & first position
     readyQ = sortProcessByDeadline(readyQ);
 
-
     const runningProcess = readyQ.shift();
-
 
     // 4. Calculate and record the times
     // The process starts when the CPU is currently available
     runningProcess.startTime = currentAt;
 
-
     // CT = Start Time + BT
     runningProcess.completionTime = currentAt + runningProcess.burstTime;
 
-
     // Lateness = CT - Deadline
-    runningProcess.lateness = runningProcess.completionTime - runningProcess.deadline;
+    runningProcess.lateness =
+      runningProcess.completionTime - runningProcess.deadline;
 
     // Tardiness
     if (runningProcess.lateness <= 0) {
@@ -658,7 +664,6 @@ function deadlineAlgorithm(process) {
   console.log(ganttChart);
 }
 
-
 function sortProcessByDeadline(d) {
   const sortedProcess = d.sort((a, b) => {
     // sort by arrival time
@@ -666,10 +671,8 @@ function sortProcessByDeadline(d) {
       return a.deadline - b.deadline;
     }
 
-
     //Tie-breaker: first entered order)
     return a.PID - b.PID;
   });
   return sortedProcess;
 }
-

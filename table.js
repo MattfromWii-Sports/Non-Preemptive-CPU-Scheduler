@@ -123,7 +123,7 @@ export function updateTableRows(algoType, numOfProcesses) {
                 <td class="priority-time hide hideable">
                   <input pattern="[0-9]*" />
                 </td>
-                <td class="queue-num hide">
+                <td class="queue-num hide hideable">
                   <input pattern="[0-9]*" />
                 </td>
                 <td class="deadline-time hide hideable">
